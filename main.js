@@ -104,12 +104,12 @@ maskImage.crossOrigin = "anonymous";
 maskImage.src = 'assets/mask.png';
 let maskLoaded = false;
 
-// オーバーレイ用マスク画像（保存ミッションで使用）
-const overlayMaskImage = new Image();
-overlayMaskImage.src = 'assets/overlay-mask.png';
-let overlayMaskLoaded = false;
-overlayMaskImage.onload = () => {
-    overlayMaskLoaded = true;
+// 背景透過マスク画像（切り抜きミッションで使用）
+const maskNoBgImage = new Image();
+maskNoBgImage.src = 'assets/mask-nobg.png';
+let maskNoBgLoaded = false;
+maskNoBgImage.onload = () => {
+    maskNoBgLoaded = true;
 };
 
 maskImage.onload = () => {
@@ -334,7 +334,7 @@ class Particle {
             context.strokeStyle = '#ddd';
             context.lineWidth = 0.5 * scale;
             context.beginPath();
-            context.rect(-size/2, -size/2, size, size);
+            context.rect(-size / 2, -size / 2, size, size);
             context.fill();
             context.stroke();
         }
@@ -419,7 +419,7 @@ function drawPackageAnimation() {
         // タップ中は静止表示
         ctx.save();
         ctx.translate(session.packageAnim.x, session.packageAnim.y);
-        ctx.drawImage(packageImage, -size/2, -size/2, size, size);
+        ctx.drawImage(packageImage, -size / 2, -size / 2, size, size);
         ctx.restore();
     } else if (session.packageAnim.phase === 'shaking') {
         // 振りかけアニメーション
@@ -456,7 +456,7 @@ function drawPackageAnimation() {
         ctx.globalAlpha = opacity;
         ctx.translate(session.packageAnim.x + session.packageAnim.offsetX, session.packageAnim.y + session.packageAnim.offsetY);
         ctx.rotate(session.packageAnim.rotation);
-        ctx.drawImage(packageImage, -size/2, -size/2, size, size);
+        ctx.drawImage(packageImage, -size / 2, -size / 2, size, size);
         ctx.restore();
     }
 }
@@ -537,7 +537,7 @@ canvas.addEventListener('mouseup', (e) => {
         const fireY = session.packageAnim ? session.packageAnim.sprinkleY : y;
         sprinkle(fireX, fireY, session.powerGauge);
         session.isHolding = false;
-        
+
         // 振りかけアニメーションに切り替え
         if (session.packageAnim) {
             session.packageAnim.phase = 'shaking';
@@ -551,7 +551,7 @@ canvas.addEventListener('mousemove', (e) => {
         const { x, y } = getPointerPosition(e, canvas);
         const displayX = x - 60;
         const displayY = y - 60;
-        
+
         session.packageAnim.x = displayX;
         session.packageAnim.y = displayY;
         session.packageAnim.sprinkleX = displayX - 10;
@@ -564,7 +564,7 @@ canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
         session.isHolding = true;
         session.powerGauge = 0;
-        
+
         // パッケージアニメーションを開始
         const { x, y } = getPointerPosition(e, canvas);
         const displayX = x - 60;  // 画像表示位置（左上）
@@ -589,7 +589,7 @@ canvas.addEventListener('touchmove', (e) => {
         const { x, y } = getPointerPosition(e, canvas);
         const displayX = x - 60;
         const displayY = y - 60;
-        
+
         session.packageAnim.x = displayX;
         session.packageAnim.y = displayY;
         session.packageAnim.sprinkleX = displayX - 10;
@@ -606,7 +606,7 @@ canvas.addEventListener('touchend', (e) => {
         const fireY = session.packageAnim ? session.packageAnim.sprinkleY : y;
         sprinkle(fireX, fireY, session.powerGauge);
         session.isHolding = false;
-        
+
         // 振りかけアニメーションに切り替え
         if (session.packageAnim) {
             session.packageAnim.phase = 'shaking';
@@ -667,19 +667,19 @@ function drawCropCircle() {
         tempCanvas.width = cropMask.width;
         tempCanvas.height = cropMask.height;
         const tempCtx = tempCanvas.getContext('2d');
-        
+
         // ごましおを描画
         tempCtx.drawImage(offscreenCanvas, maskX, maskY, cropMask.width, cropMask.height, 0, 0, cropMask.width, cropMask.height);
-        
+
         // オーバーレイ画像を重ねて切り抜き時にもキャラを確認できるようにする
-        if (overlayMaskLoaded) {
-            tempCtx.drawImage(overlayMaskImage, 0, 0, cropMask.width, cropMask.height);
+        if (maskNoBgLoaded) {
+            tempCtx.drawImage(maskNoBgImage, 0, 0, cropMask.width, cropMask.height);
         }
 
         cropCtx.drawImage(tempCanvas, maskX, maskY);
         cropCtx.restore();
     }
-    
+
     // リサイズハンドル
     const handle = getResizeHandlePos();
     cropCtx.fillStyle = '#fff';
@@ -721,7 +721,7 @@ function drawCropCircle() {
 cropCanvas.addEventListener('mousedown', (e) => {
     if (session.currentStage !== 2) return;
     const { x, y } = getPointerPosition(e, cropCanvas);
-    
+
     const handle = getResizeHandlePos();
     const distToHandle = Math.sqrt((x - handle.x) ** 2 + (y - handle.y) ** 2);
 
@@ -742,7 +742,7 @@ cropCanvas.addEventListener('mousedown', (e) => {
 cropCanvas.addEventListener('mousemove', (e) => {
     if (session.currentStage !== 2) return;
     const { x, y } = getPointerPosition(e, cropCanvas);
-    
+
     if (isDraggingResize) {
         const dx = x - cropMask.x;
         const dy = y - cropMask.y;
@@ -778,7 +778,7 @@ cropCanvas.addEventListener('touchstart', (e) => {
     if (session.currentStage !== 2) return;
     e.preventDefault();
     const { x, y } = getPointerPosition(e, cropCanvas);
-    
+
     const handle = getResizeHandlePos();
     const distToHandle = Math.sqrt((x - handle.x) ** 2 + (y - handle.y) ** 2);
 
@@ -800,7 +800,7 @@ cropCanvas.addEventListener('touchmove', (e) => {
     if (session.currentStage !== 2) return;
     e.preventDefault();
     const { x, y } = getPointerPosition(e, cropCanvas);
-    
+
     if (isDraggingResize) {
         const dx = x - cropMask.x;
         const dy = y - cropMask.y;
@@ -835,23 +835,23 @@ document.getElementById('confirmCropBtn').addEventListener('click', () => {
 
 // ミッション3: 保存
 function createCroppedImage() {
-    if (!maskLoaded || !overlayMaskLoaded) {
+    if (!maskLoaded || !maskNoBgLoaded) {
         console.log('Mask images not loaded yet');
         return;
     }
 
     const outputSize = 400;
-        previewCanvas.width = outputSize;
-        previewCanvas.height = outputSize;
-        
-        previewCtx.clearRect(0, 0, outputSize, outputSize);
-        // 背景を白で塗りつぶす
-        previewCtx.fillStyle = '#ffffff';
-        previewCtx.fillRect(0, 0, outputSize, outputSize);
-        
-        const maskX = cropMask.x - cropMask.width / 2;
-        const maskY = cropMask.y - cropMask.height / 2;
-        const scale = outputSize / cropMask.width;
+    previewCanvas.width = outputSize;
+    previewCanvas.height = outputSize;
+
+    previewCtx.clearRect(0, 0, outputSize, outputSize);
+    // 背景を白で塗りつぶす
+    previewCtx.fillStyle = '#ffffff';
+    previewCtx.fillRect(0, 0, outputSize, outputSize);
+
+    const maskX = cropMask.x - cropMask.width / 2;
+    const maskY = cropMask.y - cropMask.height / 2;
+    const scale = outputSize / cropMask.width;
 
     // ステップ1: 一時キャンバスでごましおを描画
     const tempCanvas = document.createElement('canvas');
@@ -885,7 +885,7 @@ function createCroppedImage() {
             } else {
                 tempCtx.fillStyle = '#ffffff';
                 tempCtx.beginPath();
-                tempCtx.rect(-size/2, -size/2, size, size);
+                tempCtx.rect(-size / 2, -size / 2, size, size);
                 tempCtx.fill();
             }
 
@@ -893,29 +893,24 @@ function createCroppedImage() {
         }
     });
 
-    // ステップ2: overlayMaskImageの不透明部分を削除（透過部分にのみごましおを残す）
-    // overlayMaskImageは白背景PNG、キャラクター部分は不透明なので削除
-    tempCtx.globalCompositeOperation = 'destination-out';
-    tempCtx.drawImage(overlayMaskImage, 0, 0, outputSize, outputSize);
-    tempCtx.globalCompositeOperation = 'source-over';
-
-    // ステップ3: メインキャンバスにごましおを描画（キャラクター以外の部分）
+    // ステップ2: メインキャンバスにごましおを描画
     previewCtx.drawImage(tempCanvas, 0, 0);
 
-    // ステップ4: その上に透過PNG画像（maskImage）を重ねる
-            previewCtx.drawImage(maskImage, 0, 0, outputSize, outputSize);
-            
-            // プレビュー画像を表示
-            const previewImage = document.getElementById('previewImage');
-            previewImage.src = previewCanvas.toDataURL('image/png');
-            
-            // オーバーレイも重ねて表示
-            const overlayPreview = document.getElementById('overlayPreview');
-            overlayPreview.src = maskImage.src;
+    // ステップ3: その上に透過PNG画像（maskImage）を重ねる
+    // maskImageはキャラクターの頭の部分のみが透過され、周囲は不透明な画像
+    previewCtx.drawImage(maskImage, 0, 0, outputSize, outputSize);
 
-            // 最近の作品として保存（最大3件）
-            saveRecentImage(previewImage.src);
-        }
+    // プレビュー画像を表示
+    const previewImage = document.getElementById('previewImage');
+    previewImage.src = previewCanvas.toDataURL('image/png');
+
+    // オーバーレイも重ねて表示
+    const overlayPreview = document.getElementById('overlayPreview');
+    overlayPreview.src = maskImage.src;
+
+    // 最近の作品として保存（最大3件）
+    saveRecentImage(previewImage.src);
+}
 
 document.getElementById('downloadBtn').addEventListener('click', () => {
     const link = document.createElement('a');
