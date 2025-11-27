@@ -12,7 +12,8 @@ function createSession() {
         isDraggingSlider: false,
         activeParticles: [],
         settledParticles: [],
-        sesameRatio: 0.5
+        sesameRatio: 0.5,
+        maskType: 'magao' // デフォルト
     };
 }
 let session = createSession();
@@ -98,19 +99,35 @@ const packageImage = new Image();
 packageImage.src = 'assets/package.png';
 
 
+// マスク画像定義
+const MASK_TYPES = {
+    magao: {
+        mask: 'assets/magao-mask.png',
+        maskNoBg: 'assets/magao-mask-nobg.png'
+    },
+    buchigire: {
+        mask: 'assets/buchigire-mask.png',
+        maskNoBg: 'assets/buchigire-mask-nobg.png'
+    }
+};
+
 // マスク画像の読み込み
 const maskImage = new Image();
 maskImage.crossOrigin = "anonymous";
-maskImage.src = 'assets/mask.png';
 let maskLoaded = false;
 
-// 背景透過マスク画像（切り抜きミッションで使用）
 const maskNoBgImage = new Image();
-maskNoBgImage.src = 'assets/mask-nobg.png';
 let maskNoBgLoaded = false;
-maskNoBgImage.onload = () => {
-    maskNoBgLoaded = true;
-};
+
+function loadMaskImages(type) {
+    maskLoaded = false;
+    maskNoBgLoaded = false;
+
+    const paths = MASK_TYPES[type] || MASK_TYPES.magao;
+
+    maskImage.src = paths.mask;
+    maskNoBgImage.src = paths.maskNoBg;
+}
 
 maskImage.onload = () => {
     console.log('Mask image loaded successfully');
@@ -122,6 +139,13 @@ maskImage.onload = () => {
 
 maskImage.onerror = () => {
     console.error('Failed to load mask image');
+};
+
+maskNoBgImage.onload = () => {
+    maskNoBgLoaded = true;
+    if (session.currentStage === 2) {
+        drawCropCircle();
+    }
 };
 
 // オフスクリーンキャンバス
@@ -154,7 +178,9 @@ function switchStage(stage, options = {}) {
     const { skipGenerate = false } = options;
     // ステージ1に戻るときはセッションを丸ごとリセット
     if (stage === 1) {
+        const currentMaskType = session.maskType;
         session = createSession();
+        session.maskType = currentMaskType;
     } else {
         session.currentStage = stage;
         // ステージ間の遷移中フラグは明示的に解除
@@ -923,8 +949,39 @@ document.getElementById('restartBtn').addEventListener('click', () => {
     switchStage(1);
 });
 
+// マスク定義リスト（順序制御用）
+const MASK_LIST = [
+    { id: 'magao', name: '真顔' },
+    { id: 'buchigire', name: 'ブチギレ' }
+];
+
+function updateMaskSelection() {
+    const currentMask = MASK_LIST.find(m => m.id === session.maskType) || MASK_LIST[0];
+    document.getElementById('currentMaskName').textContent = currentMask.name;
+    loadMaskImages(session.maskType);
+
+    if (session.currentStage === 2) {
+        drawCropCircle();
+    }
+}
+
+document.getElementById('prevMaskBtn').addEventListener('click', () => {
+    const currentIndex = MASK_LIST.findIndex(m => m.id === session.maskType);
+    const prevIndex = (currentIndex - 1 + MASK_LIST.length) % MASK_LIST.length;
+    session.maskType = MASK_LIST[prevIndex].id;
+    updateMaskSelection();
+});
+
+document.getElementById('nextMaskBtn').addEventListener('click', () => {
+    const currentIndex = MASK_LIST.findIndex(m => m.id === session.maskType);
+    const nextIndex = (currentIndex + 1) % MASK_LIST.length;
+    session.maskType = MASK_LIST[nextIndex].id;
+    updateMaskSelection();
+});
+
 // 初期化
 updateSliderPosition();
+updateMaskSelection(); // 初期表示更新
 switchStage(1);
 animate();
 renderRecentImages();

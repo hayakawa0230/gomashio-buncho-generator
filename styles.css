@@ -191,19 +191,24 @@ canvas {
         transform: rotate(0deg) translateX(0);
         opacity: 1;
     }
+
     20% {
         transform: rotate(-15deg) translateX(-5px);
     }
+
     40% {
         transform: rotate(-20deg) translateX(-3px);
     }
+
     60% {
         transform: rotate(-25deg) translateX(-7px);
     }
+
     80% {
         transform: rotate(-30deg) translateX(-10px);
         opacity: 0.7;
     }
+
     100% {
         transform: rotate(-35deg) translateX(-15px);
         opacity: 0;
@@ -263,13 +268,105 @@ canvas {
     body {
         padding: 12px 16px;
     }
+
     .container {
         padding: 20px;
     }
+
     .ratio-slider-container {
         max-width: 100%;
     }
+
     .package-container {
         max-width: 100%;
     }
+}
+
+/* Mask Selector */
+.mask-selector {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mask-label {
+    font-size: 14px;
+    color: #6a4e3c;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.mask-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.mask-option {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.mask-option input[type="radio"] {
+    accent-color: #ea7640;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.mask-name {
+    color: #5d4037;
+    font-weight: bold;
+}
+
+/* Carousel Mask Selector */
+.mask-carousel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    background: #fff;
+    padding: 8px 20px;
+    border-radius: 30px;
+    border: 2px solid #6a4e3c;
+    box-shadow: 0 4px 0 rgba(106, 78, 60, 0.2);
+    margin-bottom: 10px;
+}
+
+.mask-nav-btn {
+    background: #ea7640;
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.mask-nav-btn:hover {
+    transform: scale(1.1);
+    background: #f59365;
+}
+
+.mask-nav-btn:active {
+    transform: scale(0.95);
+    box-shadow: none;
+}
+
+.mask-current-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #6a4e3c;
+    min-width: 100px;
+    text-align: center;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,16 +19,17 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2RRP57SVDP"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-2RRP57SVDP');
     </script>
 </head>
+
 <body>
     <div class="container">
         <h1><span class="title-line1">ごましお文鳥</span><span class="title-line2">ジェネレーター</span></h1>
         <div class="stage-info" id="stageInfo">ミッション1: ごましおを振れ！</div>
-        
+
         <!-- ミッション1: ごましおを振る -->
         <div id="stage1">
             <div class="counter">のこり: <span id="remainingCount">5</span> 回</div>
@@ -41,6 +43,7 @@
                     ごま <span id="sesamePercent">50</span>% : しお <span id="saltPercent">50</span>%
                 </div>
             </div>
+
             <div class="package-container">
                 <canvas id="canvas" width="480" height="320"></canvas>
             </div>
@@ -52,6 +55,16 @@
         <!-- ミッション2: 切り抜き -->
         <div id="stage2" class="hidden">
             <canvas id="cropCanvas" width="480" height="320"></canvas>
+
+            <div class="mask-selector">
+                <div class="mask-label">文鳥の表情</div>
+                <div class="mask-carousel">
+                    <button class="mask-nav-btn" id="prevMaskBtn">◀</button>
+                    <span class="mask-current-name" id="currentMaskName">真顔</span>
+                    <button class="mask-nav-btn" id="nextMaskBtn">▶</button>
+                </div>
+            </div>
+
             <div class="crop-controls">
                 <button class="btn" id="confirmCropBtn">この範囲で切り抜く</button>
             </div>
@@ -85,4 +98,5 @@
     <script src="main.js"></script>
 
 </body>
+
 </html>
