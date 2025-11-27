@@ -280,6 +280,17 @@ canvas {
     .package-container {
         max-width: 100%;
     }
+
+    .mask-current-name {
+        min-width: 100px;
+    }
+
+    .mask-carousel {
+        padding: 8px 10px;
+        gap: 8px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
 }
 
 /* Mask Selector */
@@ -288,13 +299,6 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.mask-label {
-    font-size: 14px;
-    color: #6a4e3c;
-    margin-bottom: 8px;
-    font-weight: bold;
 }
 
 .mask-options {
@@ -363,10 +367,10 @@ canvas {
 }
 
 .mask-current-name {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     color: #6a4e3c;
-    min-width: 100px;
+    min-width: 180px;
     text-align: center;
     font-family: 'M PLUS Rounded 1c', sans-serif;
 }

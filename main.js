@@ -105,9 +105,17 @@ const MASK_TYPES = {
         mask: 'assets/magao-mask.png',
         maskNoBg: 'assets/magao-mask-nobg.png'
     },
+    magaoNoago: {
+        mask: 'assets/magao-noago-mask.png',
+        maskNoBg: 'assets/magao-noago-mask-nobg.png'
+    },
     buchigire: {
         mask: 'assets/buchigire-mask.png',
         maskNoBg: 'assets/buchigire-mask-nobg.png'
+    },
+    buchigireNoago: {
+        mask: 'assets/buchigire-noago-mask.png',
+        maskNoBg: 'assets/buchigire-noago-mask-nobg.png'
     }
 };
 
@@ -122,6 +130,11 @@ let maskNoBgLoaded = false;
 function loadMaskImages(type) {
     maskLoaded = false;
     maskNoBgLoaded = false;
+
+
+    if (!MASK_TYPES[type]) {
+        console.error('Invalid mask type:', type);
+    }
 
     const paths = MASK_TYPES[type] || MASK_TYPES.magao;
 
@@ -951,8 +964,10 @@ document.getElementById('restartBtn').addEventListener('click', () => {
 
 // マスク定義リスト（順序制御用）
 const MASK_LIST = [
-    { id: 'magao', name: '真顔' },
-    { id: 'buchigire', name: 'ブチギレ' }
+    { id: 'magao', name: 'まがお' },
+    { id: 'magaoNoago', name: 'まがお（ごまあご）' },
+    { id: 'buchigire', name: 'ブチギレ' },
+    { id: 'buchigireNoago', name: 'ブチギレ（ごまあご）' }
 ];
 
 function updateMaskSelection() {
